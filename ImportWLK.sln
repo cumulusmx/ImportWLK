@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportWLK", "ImportWLK.csproj", "{F9D1F3D0-547D-4A7A-8092-B2D3A254C1C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9D1F3D0-547D-4A7A-8092-B2D3A254C1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9D1F3D0-547D-4A7A-8092-B2D3A254C1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9D1F3D0-547D-4A7A-8092-B2D3A254C1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9D1F3D0-547D-4A7A-8092-B2D3A254C1C7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5FCD4CC2-5EB8-4091-8603-40BE341C4995}
+	EndGlobalSection
+EndGlobal

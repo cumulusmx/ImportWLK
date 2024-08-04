@@ -135,6 +135,7 @@ namespace ImportWLK
 					LogFile.ApparentLow = 9999;
 					LogFile.FeelsLikeHigh = -9999;
 					LogFile.FeelsLikeLow = 9999;
+					LogFile.WindAvgHigh = -9999;
 
 					LogFile.ClicksToday = 0;
 
@@ -175,31 +176,7 @@ namespace ImportWLK
 								if (rec.Timestamp.Month != month)
 								{
 									// set the daily records for derived values
-									if (LogFile.HumidexHigh > -9999)
-									{
-										DayFile.Records[date].HighHumidex = LogFile.HumidexHigh;
-										DayFile.Records[date].HighHumidexTime = LogFile.HumidexHighTime;
-									}
-									if (LogFile.ApparentHigh > -9999)
-									{
-										DayFile.Records[date].HighAppTemp = LogFile.ApparentHigh;
-										DayFile.Records[date].HighAppTempTime = LogFile.ApparentHighTime;
-									}
-									if (LogFile.ApparentLow < 9999)
-									{
-										DayFile.Records[date].LowAppTemp = LogFile.ApparentLow;
-										DayFile.Records[date].LowAppTempTime = LogFile.ApparentLowTime;
-									}
-									if (LogFile.FeelsLikeHigh > -9999)
-									{
-										DayFile.Records[date].HighFeelsLike = LogFile.FeelsLikeHigh;
-										DayFile.Records[date].HighFeelsLikeTime = LogFile.FeelsLikeHighTime;
-									}
-									if (LogFile.FeelsLikeLow < 9999)
-									{
-										DayFile.Records[date].LowFeelsLike = LogFile.FeelsLikeLow;
-										DayFile.Records[date].LowFeelsLikeTime = LogFile.FeelsLikeLowTime;
-									}
+									SetExtraValues(date);
 
 									// save the log file
 									LogFile.WriteLogFile();
@@ -263,38 +240,15 @@ namespace ImportWLK
 						}
 					}
 
-
+					// set the daily records for derived values
+					SetExtraValues(date);
 				}
 
 				// save the log file if not done already
 				if (!logFileWritten)
 				{
 					// set the daily records for derived values
-					if (LogFile.HumidexHigh > -9999)
-					{
-						DayFile.Records[date].HighHumidex = LogFile.HumidexHigh;
-						DayFile.Records[date].HighHumidexTime = LogFile.HumidexHighTime;
-					}
-					if (LogFile.ApparentHigh > -9999)
-					{
-						DayFile.Records[date].HighAppTemp = LogFile.ApparentHigh;
-						DayFile.Records[date].HighAppTempTime = LogFile.ApparentHighTime;
-					}
-					if (LogFile.ApparentLow < 9999)
-					{
-						DayFile.Records[date].LowAppTemp = LogFile.ApparentLow;
-						DayFile.Records[date].LowAppTempTime = LogFile.ApparentLowTime;
-					}
-					if (LogFile.FeelsLikeHigh > -9999)
-					{
-						DayFile.Records[date].HighFeelsLike = LogFile.FeelsLikeHigh;
-						DayFile.Records[date].HighFeelsLikeTime = LogFile.FeelsLikeHighTime;
-					}
-					if (LogFile.FeelsLikeLow < 9999)
-					{
-						DayFile.Records[date].LowFeelsLike = LogFile.FeelsLikeLow;
-						DayFile.Records[date].LowFeelsLikeTime = LogFile.FeelsLikeLowTime;
-					}
+					SetExtraValues(date);
 
 					LogFile.WriteLogFile();
 					LogFile.Initialise();
@@ -311,6 +265,7 @@ namespace ImportWLK
 
 			// summary
 			LogConsole($"Wrote {DayFile.Records.Count} records to the day file", ConsoleColor.Green);
+			LogMessage($"Wrote {DayFile.Records.Count} records to the day file");
 
 			LogConsole("Finished", ConsoleColor.Green);
 			LogMessage("Finished");
@@ -335,6 +290,41 @@ namespace ImportWLK
 			}
 
 			Console.ForegroundColor = defConsoleColour;
+		}
+
+		private static void SetExtraValues(DateTime date)
+		{
+			// set the daily records for derived values
+			if (LogFile.HumidexHigh > -9999)
+			{
+				DayFile.Records[date].HighHumidex = LogFile.HumidexHigh;
+				DayFile.Records[date].HighHumidexTime = LogFile.HumidexHighTime;
+			}
+			if (LogFile.ApparentHigh > -9999)
+			{
+				DayFile.Records[date].HighAppTemp = LogFile.ApparentHigh;
+				DayFile.Records[date].HighAppTempTime = LogFile.ApparentHighTime;
+			}
+			if (LogFile.ApparentLow < 9999)
+			{
+				DayFile.Records[date].LowAppTemp = LogFile.ApparentLow;
+				DayFile.Records[date].LowAppTempTime = LogFile.ApparentLowTime;
+			}
+			if (LogFile.FeelsLikeHigh > -9999)
+			{
+				DayFile.Records[date].HighFeelsLike = LogFile.FeelsLikeHigh;
+				DayFile.Records[date].HighFeelsLikeTime = LogFile.FeelsLikeHighTime;
+			}
+			if (LogFile.FeelsLikeLow < 9999)
+			{
+				DayFile.Records[date].LowFeelsLike = LogFile.FeelsLikeLow;
+				DayFile.Records[date].LowFeelsLikeTime = LogFile.FeelsLikeLowTime;
+			}
+			if (LogFile.WindAvgHigh > -9999)
+			{
+				DayFile.Records[date].HighAvgWind = LogFile.WindAvgHigh;
+				DayFile.Records[date].HighAvgWindTime = LogFile.WindAvgHighTime;
+			}
 		}
 	}
 }

@@ -28,6 +28,7 @@ namespace ImportWLK
 				rec.ExtraHum[0] < 255 || rec.ExtraHum[1] < 255 || rec.ExtraHum[2] < 255 || rec.ExtraHum[3] < 255 || rec.ExtraHum[4] < 255 || rec.ExtraHum[5] < 255 || rec.ExtraHum[6] < 255)
 			{
 				// we have data
+				Program.LogMessage("  Extra log entry for " + rec.Timestamp);
 			}
 			else
 			{
@@ -42,7 +43,7 @@ namespace ImportWLK
 			}
 
 			// Soil Temp
-			for (var i = 0; i < 7; i++)
+			for (var i = 0; i < 6; i++)
 			{
 				if (rec.SoilTemp[i] < 255)
 				{
@@ -53,7 +54,7 @@ namespace ImportWLK
 			}
 
 			// Soil Moisture
-			for (var i = 0; i < 7; i++)
+			for (var i = 0; i < 6; i++)
 			{
 				if (rec.SoilMoist[i] < 255)
 				{
@@ -62,7 +63,7 @@ namespace ImportWLK
 			}
 
 			// Leaf Wetness
-			for (var i = 0; i < 5; i++)
+			for (var i = 0; i < 4; i++)
 			{
 				if (rec.LeafWet[i] < 255)
 				{
@@ -197,7 +198,7 @@ namespace ImportWLK
 			// make sure solar max is calculated for those stations without a solar sensor
 			Program.LogMessage("DoExtraLogFile: Writing log entry for " + rec.LogTime);
 			var inv = CultureInfo.InvariantCulture;
-			var sep = ",";
+			var sep = ',';
 
 			var sb = new StringBuilder(256);
 			sb.Append(rec.LogTime.ToString("dd/MM/yy", inv) + sep);
@@ -210,7 +211,7 @@ namespace ImportWLK
 			// Extra Hum 1-10
 			for (int i = 0; i < 10; i++)
 			{
-				sb.Append(rec.Humidity[i] + sep);
+				sb.Append(rec.Humidity[i].ToString() + sep);
 			}
 			// Extra Dewpoint 1-10
 			for (int i = 0; i < 10; i++)
@@ -225,13 +226,13 @@ namespace ImportWLK
 			// Extra Soil Moisture 1-4
 			for (int i = 0; i < 4; i++)
 			{
-				sb.Append(rec.SoilMoisture[i] + sep);
+				sb.Append(rec.SoilMoisture[i].ToString() + sep);
 			}
 			// Leaf temp - not used
 			sb.Append("0,0,0,0,");
 			// Extra Leaf wetness 1-2
-			sb.Append(rec.LeafWetness[0] + sep);
-			sb.Append(rec.LeafWetness[1] + sep);
+			sb.Append(rec.LeafWetness[0].ToString() + sep);
+			sb.Append(rec.LeafWetness[1].ToString() + sep);
 			// Soil Temp 5-16
 			for (int i = 4; i < 16; i++)
 			{
@@ -240,22 +241,22 @@ namespace ImportWLK
 			// Soil Moisture 5-16
 			for (int i = 4; i < 16; i++)
 			{
-				sb.Append(rec.SoilMoisture[i] + sep);
+				sb.Append(rec.SoilMoisture[i].ToString() + sep);
 			}
 			// Air quality 1-4
 			for (int i = 0; i < 4; i++)
 			{
-				sb.Append('0' + sep);
+				sb.Append("0" + sep);
 			}
 			// Air quality avg 1-4
 			for (int i = 0; i < 4; i++)
 			{
-				sb.Append('0' + sep);
+				sb.Append("0" + sep);
 			}
 			// User temp 1-8
 			for (int i = 0; i < 8; i++)
 			{
-				sb.Append('0' + sep);
+				sb.Append("0" + sep);
 			}
 			// CO2
 			sb.Append("0,0,0,0,0,0,0,0");
@@ -277,8 +278,8 @@ namespace ImportWLK
 		public int[] Humidity = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		public double[] Dewpoint = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		public double[] SoilTemp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		public double[] SoilMoisture = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		public int[] SoilMoisture = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		public double[] LeafTemp = [0, 0];
-		public double[] LeafWetness = [0, 0];
+		public int[] LeafWetness = [0, 0];
 	}
 }

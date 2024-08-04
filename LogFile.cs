@@ -21,6 +21,9 @@ namespace ImportWLK
 		public static DateTime FeelsLikeHighTime { get; set; }
 		public static DateTime FeelsLikeLowTime { get; set; }
 
+		public static double WindAvgHigh { get; set; }
+		public static DateTime WindAvgHighTime { get; set; }
+
 		public static int ClicksToday { get; set; }
 		public static int ClicksThisYear { get; set; }
 
@@ -74,11 +77,10 @@ namespace ImportWLK
 			val = rec.InsideHumidity / 10.0;
 			value.InsideHum = rec.InsideHumidity < 0 ? 0 : (int) val;
 
-			var bucketType = rec.RainClicks & 0xF000;
 			double bucketSize;
 			string bucketUnit;
 
-			if (BucketTypes.TryGetValue(bucketType, out var bucketInfo))
+			if (BucketTypes.TryGetValue(rec.RainCollectorType, out var bucketInfo))
 			{
 				(bucketSize, bucketUnit) = bucketInfo;
 			}
@@ -93,7 +95,15 @@ namespace ImportWLK
 			{
 				ClicksThisYear += rec.RainClicks;
 				ClicksToday += rec.RainClicks;
-				value.RainfallCounter = ConvertUnits.RainINToUser(ClicksThisYear * bucketSize);
+
+				if (bucketUnit == "in")
+				{
+					value.RainfallCounter = ConvertUnits.RainINToUser(ClicksThisYear * bucketSize);
+				}
+				else
+				{
+					value.RainfallCounter = ConvertUnits.RainMMToUser(ClicksThisYear * bucketSize);
+				}
 
 				if (rec.Timestamp.Hour == 0 && rec.Timestamp.Minute == 0)
 					ClicksToday = 0;
@@ -137,47 +147,55 @@ namespace ImportWLK
 			conv = ConvertUnits.WindMPHToUser(val);
 			value.WindSpeed = rec.WindSpeed < 0 ? 0 : conv;
 
+			if (value.WindSpeed > WindAvgHigh)
+			{
+				WindAvgHigh = value.WindSpeed;
+				WindAvgHighTime = rec.Timestamp;
+			}
+
 			val = rec.WindDir == 255 ? 0 : (int) (rec.WindDir * 22.5);
 			value.WindBearing = (int) val;
 			value.SolarRad = rec.Solar < 0 ? 0 : rec.Solar;
 			value.UVI = rec.UV > 200 ? 0 : rec.UV / 10;
 			value.ET = ConvertUnits.RainINToUser(rec.ET > 200 ? 0 : rec.ET / 1000);
 
+			// TODO: Chill hours
+
 			if (rec.OutsideTemp > -2000 && rec.WindSpeed >= 0)
 			{
 				val = MeteoLib.WindChill(ConvertUnits.UserTempToC(value.Temperature), ConvertUnits.UserWindToKPH(value.WindSpeed));
-				value.WindChill = val;
+				value.WindChill = ConvertUnits.TempCToUser(val);
 			}
 
 			if (rec.OutsideTemp > -2000 && rec.OutsideHumidity >= 0 && rec.OutsideHumidity <= 1000)
 			{
 				val = MeteoLib.HeatIndex(ConvertUnits.UserTempToC(value.Temperature), value.Humidity);
-				value.HeatIndex = val;
+				value.HeatIndex = ConvertUnits.TempCToUser(val);
 
 				val = MeteoLib.Humidex(ConvertUnits.UserTempToC(value.Temperature), value.Humidity);
-				value.Humidex = val;
+				value.Humidex = ConvertUnits.TempCToUser(val);
 
-				if (val > HumidexHigh)
+				if (value.Humidex > HumidexHigh)
 				{
 					HumidexHigh = val;
 					HumidexHighTime = rec.Timestamp;
 				}
 
 				val = MeteoLib.DewPoint(ConvertUnits.UserTempToC(value.Temperature), value.Humidity);
-				value.Dewpoint = val;
+				value.Dewpoint = ConvertUnits.TempCToUser(val);
 			}
 
 			if (rec.OutsideTemp > -2000 && rec.OutsideHumidity >= 0 && rec.OutsideHumidity <= 1000 && rec.WindSpeed >= 0)
 			{
 				val = MeteoLib.ApparentTemperature(ConvertUnits.UserTempToC(value.Temperature), ConvertUnits.UserWindToMS(value.WindSpeed), value.Humidity);
-				value.ApparentTemp = val;
+				value.ApparentTemp = ConvertUnits.TempCToUser(val);
 
-				if (val > ApparentHigh)
+				if (value.ApparentTemp > ApparentHigh)
 				{
 					ApparentHigh = val;
 					ApparentHighTime = rec.Timestamp;
 				}
-				if (val < ApparentLow)
+				if (value.ApparentTemp < ApparentLow)
 				{
 					ApparentLow = val;
 					ApparentLowTime = rec.Timestamp;
@@ -185,14 +203,14 @@ namespace ImportWLK
 
 
 				val = MeteoLib.FeelsLike(ConvertUnits.UserTempToC(value.Temperature), ConvertUnits.UserWindToKPH(value.WindSpeed), value.Humidity);
-				value.FeelsLike = val;
+				value.FeelsLike = ConvertUnits.TempCToUser(val);
 
-				if (val > FeelsLikeHigh)
+				if (value.FeelsLike > FeelsLikeHigh)
 				{
 					FeelsLikeHigh = val;
 					FeelsLikeHighTime = rec.Timestamp;
 				}
-				if (val < FeelsLikeLow)
+				if (value.FeelsLike < FeelsLikeLow)
 				{
 					FeelsLikeLow = val;
 					FeelsLikeLowTime = rec.Timestamp;
@@ -310,7 +328,6 @@ namespace ImportWLK
 
 			// make sure solar max is calculated for those stations without a solar sensor
 			Program.LogMessage("DoLogFile: Writing log entry for " + rec.LogTime);
-			var CurrentSolarMax = AstroLib.SolarMax(rec.LogTime, (double) Program.Cumulus.Longitude, (double) Program.Cumulus.Latitude, Utils.AltitudeM(Program.Cumulus.Altitude), out _, Program.Cumulus.SolarOptions);
 			var inv = CultureInfo.InvariantCulture;
 			var sep = ",";
 
@@ -318,28 +335,28 @@ namespace ImportWLK
 			sb.Append(rec.LogTime.ToString("dd/MM/yy", inv) + sep);
 			sb.Append(rec.LogTime.ToString("HH:mm", inv) + sep);
 			sb.Append(rec.Temperature.ToString(Program.Cumulus.TempFormat, inv) + sep);
-			sb.Append(rec.Humidity + sep);
+			sb.Append(rec.Humidity.ToString() + sep);
 			sb.Append(rec.Dewpoint.ToString(Program.Cumulus.TempFormat, inv) + sep);
 			sb.Append(rec.WindSpeed.ToString(Program.Cumulus.WindAvgFormat, inv) + sep);
 			sb.Append(rec.WindGust.ToString(Program.Cumulus.WindFormat, inv) + sep);
-			sb.Append(rec.WindBearing + sep);
+			sb.Append(rec.WindBearing.ToString() + sep);
 			sb.Append(rec.RainfallRate.ToString(Program.Cumulus.RainFormat, inv) + sep);
 			sb.Append(rec.RainfallToday.ToString(Program.Cumulus.RainFormat, inv) + sep);
 			sb.Append(rec.Baro.ToString(Program.Cumulus.PressFormat, inv) + sep);
 			sb.Append(rec.RainfallCounter.ToString(Program.Cumulus.RainFormat, inv) + sep);
 			sb.Append(rec.InsideTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
-			sb.Append(rec.InsideHum + sep);
+			sb.Append(rec.InsideHum.ToString() + sep);
 			sb.Append(rec.CurrentGust.ToString(Program.Cumulus.WindFormat, inv) + sep);
 			sb.Append(rec.WindChill.ToString(Program.Cumulus.TempFormat, inv) + sep);
 			sb.Append(rec.HeatIndex.ToString(Program.Cumulus.TempFormat, inv) + sep);
 			sb.Append(rec.UVI.ToString(Program.Cumulus.UVFormat, inv) + sep);
-			sb.Append(rec.SolarRad + sep);
+			sb.Append(rec.SolarRad.ToString() + sep);
 			sb.Append(rec.ET.ToString(Program.Cumulus.ETFormat, inv) + sep);
-			sb.Append("0.0" + sep); // annual ET
+			sb.Append(sep); // annual ET
 			sb.Append(rec.ApparentTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
-			sb.Append(rec.SolarMax + sep);
+			sb.Append(rec.SolarMax.ToString() + sep);
 			sb.Append(rec.SunshineHours.ToString(Program.Cumulus.SunFormat, inv) + sep);
-			sb.Append(rec.WindBearing + sep);
+			sb.Append(rec.WindBearing.ToString() + sep);
 			sb.Append(rec.RG11Rain.ToString(Program.Cumulus.RainFormat, inv) + sep);
 			sb.Append(rec.RainSinceMidnight.ToString(Program.Cumulus.RainFormat, inv) + sep);
 			sb.Append(rec.FeelsLike.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -377,7 +394,7 @@ namespace ImportWLK
 		public int SolarRad;
 		public double ET;
 		public double ApparentTemp;
-		public double SolarMax;
+		public int SolarMax;
 		public double SunshineHours = 0;
 		public int CurrentBearing;
 		public double RG11Rain = 0;

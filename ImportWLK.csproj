@@ -8,7 +8,7 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <Company>Cumulus MX</Company>
     <Copyright>Copyright ©  2024-$([System.DateTime]::Now.ToString('yyyy')) Cumulus MX</Copyright>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

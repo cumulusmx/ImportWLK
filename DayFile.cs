@@ -160,7 +160,7 @@ namespace ImportWLK
 			else
 			{
 				strb.Append(rec.HighGust.ToString(Program.Cumulus.WindFormat, inv) + sep);
-				strb.Append(rec.HighGustBearing + sep);
+				strb.Append(rec.HighGustBearing.ToString() + sep);
 				strb.Append(rec.HighGustTime.ToString("HH:mm", inv) + sep);
 			}
 
@@ -224,7 +224,7 @@ namespace ImportWLK
 			strb.Append(rec.WindRun.ToString("F1", inv) + sep);
 
 			if (rec.HighAvgWind < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighAvgWind.ToString(Program.Cumulus.WindAvgFormat, inv) + sep);
@@ -232,26 +232,33 @@ namespace ImportWLK
 			}
 
 			if (rec.LowHumidity == 9999)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.LowHumidity + sep);
+				strb.Append(rec.LowHumidity.ToString() + sep);
 				strb.Append(rec.LowHumidityTime.ToString("HH:mm", inv) + sep);
 			}
 
 			if (rec.HighHumidity == -9999)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighHumidity + sep);
+				strb.Append(rec.HighHumidity.ToString() + sep);
 				strb.Append(rec.HighHumidityTime.ToString("HH:mm", inv) + sep);
 			}
 
-			strb.Append(rec.ET.ToString(Program.Cumulus.ETFormat, inv) + sep);
-			strb.Append(rec.SunShineHours.ToString(Program.Cumulus.SunFormat, inv) + sep);
+			if (rec.ET < -9998)
+				strb.Append(sep);
+			else
+				strb.Append(rec.ET.ToString(Program.Cumulus.ETFormat, inv) + sep);
+
+			if (rec.SunShineHours < -9998)
+				strb.Append(sep);
+			else
+				strb.Append(rec.SunShineHours.ToString(Program.Cumulus.SunFormat, inv) + sep);
 
 			if (rec.HighHeatIndex < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighHeatIndex.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -259,7 +266,7 @@ namespace ImportWLK
 			}
 
 			if (rec.HighAppTemp < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighAppTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -267,7 +274,7 @@ namespace ImportWLK
 			}
 
 			if (rec.LowAppTemp > 9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.LowAppTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -275,7 +282,7 @@ namespace ImportWLK
 			}
 
 			if (rec.HighHourlyRain < 0)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighHourlyRain.ToString(Program.Cumulus.RainFormat, inv) + sep);
@@ -283,7 +290,7 @@ namespace ImportWLK
 			}
 
 			if (rec.LowWindChill > 9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.LowWindChill.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -291,7 +298,7 @@ namespace ImportWLK
 			}
 
 			if (rec.HighDewPoint < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighDewPoint.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -299,7 +306,7 @@ namespace ImportWLK
 			}
 
 			if (rec.LowDewPoint < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.LowDewPoint.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -309,7 +316,7 @@ namespace ImportWLK
 			if (rec.DominantWindBearing < 0 || rec.DominantWindBearing == 9999)
 				strb.Append(sep);
 			else
-				strb.Append(rec.DominantWindBearing + sep);
+				strb.Append(rec.DominantWindBearing.ToString() + sep);
 
 			if (rec.HeatingDegreeDays < -9998)
 				strb.Append(sep);
@@ -321,16 +328,16 @@ namespace ImportWLK
 			else
 				strb.Append(rec.CoolingDegreeDays.ToString("F1", inv) + sep);
 
-			if (rec.HighSolar < 0)
-				strb.Append(sep + sep);
+			if (rec.HighSolar < 0 || rec.HighSolar > 9998)
+				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighSolar + sep);
+				strb.Append(rec.HighSolar.ToString() + sep);
 				strb.Append(rec.HighSolarTime.ToString("HH:mm", inv) + sep);
 			}
 
 			if (rec.HighUv < 0)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighUv.ToString(Program.Cumulus.UVFormat, inv) + sep);
@@ -338,7 +345,7 @@ namespace ImportWLK
 			}
 
 			if (rec.HighFeelsLike < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighFeelsLike.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -346,7 +353,7 @@ namespace ImportWLK
 			}
 
 			if (rec.LowFeelsLike > 9998 || rec.LowFeelsLike < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.LowFeelsLike.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -354,7 +361,7 @@ namespace ImportWLK
 			}
 
 			if (rec.HighHumidex < -9998)
-				strb.Append(sep + sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighHumidex.ToString(Program.Cumulus.TempFormat, inv) + sep);
@@ -367,7 +374,7 @@ namespace ImportWLK
 				strb.Append(rec.ChillHours.ToString("F1", inv) + sep);
 
 			if (rec.HighRain24h < 0)
-				strb.Append(sep);
+				strb.Append(sep, 2);
 			else
 			{
 				strb.Append(rec.HighRain24h.ToString(Program.Cumulus.TempFormat, inv));
@@ -494,8 +501,8 @@ namespace ImportWLK
 				value.HighAvgWindTime = rec.Date.AddMinutes(rec.TimeMins[15]);
 			}
 
-			val = rec.RainRateHi / 100.0;
-			conv = ConvertUnits.RainINToUser(rec.RainRateHi / 100.0);
+			val = rec.RainRateHi / 1000.0;
+			conv = ConvertUnits.RainINToUser(val);
 			if (val >= 0 && val < 300 && conv > value.HighRainRate)
 			{
 				value.HighRainRate = conv;
@@ -503,7 +510,7 @@ namespace ImportWLK
 			}
 
 			val = rec.UvHi / 10.0;
-			if (val >= 0 && val < 20)
+			if (val >= 0 && val < 20 && conv > value.HighUv)
 			{
 				value.HighUv = val;
 				value.HighUvTime = rec.Date.AddMinutes(rec.TimeMins[17]);
@@ -518,7 +525,7 @@ namespace ImportWLK
 
 			val = rec.WindRun / 10.0;
 			conv = ConvertUnits.MilesToUserUnits(rec.WindRun / 10.0);
-			if (val >= 0 && val < 3200 && val > value.WindRun)
+			if (val >= 0 && val < 3200 && conv > value.WindRun)
 			{
 				value.WindRun = conv;
 			}
@@ -532,7 +539,7 @@ namespace ImportWLK
 				Records.Add(rec.Date, value);
 			}
 
-			if (rec.SolarHi != short.MinValue && rec.SolarHi > value.HighSolar)
+			if (rec.SolarHi != short.MaxValue)
 			{
 				value.HighSolar = rec.SolarHi;
 				value.HighSolarTime = rec.Date.AddMinutes(rec.TimeMins[0]);
@@ -540,28 +547,28 @@ namespace ImportWLK
 
 			var val = rec.DailyET / 1000.0;
 			var conv = ConvertUnits.RainINToUser(val);
-			if (val >= 0 && val < 320 && conv > value.ET)
+			if (val >= 0 && val < 320)
 			{
 				value.ET = conv;
 			}
 
 			val = rec.HeatIndexHi / 10.0;
 			conv = ConvertUnits.TempFToUser(val);
-			if (val > -150 && val < 250 && conv > value.HighHeatIndex)
+			if (val > -150 && val < 250)
 			{
 				value.HighHeatIndex = conv;
 				value.HighHeatIndexTime = rec.Date.AddMinutes(rec.TimeMins[1]);
 			}
 
 			val = rec.HeatDegreeDays65 / 10.0;
-			conv = ConvertUnits.TempFToUser(val);
+			conv = ConvertUnits.DegreeDaysFtoUser(val);
 			if (val > -320 && val < 320)
 			{
 				value.HeatingDegreeDays = conv;
 			}
 
 			val = rec.CoolDegreeDays65 / 10.0;
-			conv = ConvertUnits.TempFToUser(val);
+			conv = ConvertUnits.DegreeDaysFtoUser(val);
 			if (val > -320 && val < 320)
 			{
 				value.CoolingDegreeDays = conv;

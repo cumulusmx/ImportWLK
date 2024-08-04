@@ -71,7 +71,7 @@
 			OutsideHumidity = reader.ReadInt16();
 			InsideHumidity = reader.ReadInt16();
 			var rainCode = reader.ReadUInt16();
-			RainCollectorType = (rainCode & 0xF000) / 0x1000;
+			RainCollectorType = (rainCode & 0xF000);
 			RainClicks = (ushort)(rainCode & 0x0FFF);
 			RainRateHi = reader.ReadInt16();
 			WindSpeed = reader.ReadInt16();

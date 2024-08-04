@@ -201,8 +201,6 @@ namespace ImportWLK
 					// *** Cleanup: close file ***
 					if (sr != null) sr.Close();
 					if (fs != null) fs.Close();
-					sr = null;
-					fs = null;
 				}
 			}
 		}

@@ -466,6 +466,25 @@
 			};
 		}
 
+
+		/// <summary>
+		/// Converts degree days from Fahrenheit to user-configured temperature units.
+		/// </summary>
+		/// <param name="value">Degree days in Fahrenheit</param>
+		/// <returns>Degree days in user-configured temperature units</returns>
+		public static double DegreeDaysFtoUser(double value)
+		{
+			if (Program.Cumulus.Units.Temp == 0)
+			{
+				return value * 5.0 / 9.0;
+			}
+			else
+			{
+				// F
+				return value;
+			}
+		}
+
 		/// <summary>
 		/// Takes speed in user units, returns Bft number
 		/// </summary>

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ImportWLK
 {
@@ -23,7 +22,7 @@ namespace ImportWLK
 
 			defConsoleColour = Console.ForegroundColor;
 
-			var fullVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			var fullVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0, 0);
 			var version = $"{fullVer.Major}.{fullVer.Minor}.{fullVer.Build}";
 			LogMessage("ImportWLK v." + version);
 			Console.WriteLine("ImportWLK v." + version);
@@ -274,6 +273,13 @@ namespace ImportWLK
 		public static void LogMessage(string message)
 		{
 			Trace.TraceInformation(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff ") + message);
+		}
+
+		public static void LogDebugMessage(string message)
+		{
+#if DEBUG
+//			Trace.TraceInformation(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff ") + message);
+#endif
 		}
 
 		public static void LogConsole(string msg, ConsoleColor colour, bool newLine = true)

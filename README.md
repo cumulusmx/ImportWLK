@@ -1,5 +1,5 @@
 # ImportWLK
-Import WeatherLink WLK files to Cumulus MX
+Import WeatherLink WLK files into Cumulus MX
 
 ## About this program
 The ImportWLK utility is a command line program written in .NET, so it will run on Windows or Linux. Under Linux you will have to use the dotnet runtime environment to execute the program.
@@ -18,7 +18,7 @@ Copy all your WLK files from your WeatherLink installation into the new *wlk* fo
 
 ImportWLK has to be told the first date when you expect data to be available. To do this it reads the "Records Began Date" from your Cumulus.ini file.
 
-This is set to the first time you run Cumulus MX on a new installation.
+By default this is set to the first time you run Cumulus MX.
 
 If you have imported old data from another program, or another installation of Cumulus (and you have used the original Cumulus.ini file), then you will have to change the date in Cumulus MX to set it to the earlist date in your imported data.
 
@@ -41,12 +41,14 @@ However, if ImportWLK finds that the first date in your WLK files is earlier tha
 
 ImportWLK also uses your Cumulus.ini file to determine things like what units you use for your measurements. So make sure you have all this configured correctly in Cumulus MX before importing data.
 
+*_Note:_* The units used in Cumulus MX may be different from the units in the files you are importing, the units will be converted.
+
 ## Running ImportWLK
 ### Windows
 Just run the ImportWLK.exe from your root Cumulus MX folder
 > ImportWLK.exe
 ### Linux
-Run via the dotnet executable after first setting the path to teh Cumulus MX root folder
+Run via the dotnet executable after first setting the path to the Cumulus MX root folder
 > dotnet ImportWLK.dll
 
 

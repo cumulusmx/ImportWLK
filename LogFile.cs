@@ -57,7 +57,7 @@ namespace ImportWLK
 
 			var val = rec.OutsideTemp / 10.0;
 			var conv = ConvertUnits.TempFToUser(val);
-			value.Temperature = rec.OutsideTemp < -2000 ? 0 :conv;
+			value.Temperature = rec.OutsideTemp < -2000 ? 0 : Program.Cumulus.Calib.Temp.Calibrate(conv);
 
 			// not used
 			// OutsideTempHi
@@ -65,17 +65,17 @@ namespace ImportWLK
 
 			val = rec.InsideTemp / 10.0;
 			conv = ConvertUnits.TempFToUser(val);
-			value.InsideTemp = rec.InsideTemp < -2000 ? 0 : conv;
+			value.InsideTemp = rec.InsideTemp < -2000 ? 0 : Program.Cumulus.Calib.InTemp.Calibrate(conv);
 
 			val = rec.Baro / 1000.0;
 			conv = ConvertUnits.PressINHGToUser(val);
-			value.Baro = rec.Baro < 0 ? 0 : conv;
+			value.Baro = rec.Baro < 0 ? 0 : Program.Cumulus.Calib.Press.Calibrate(conv);
 
 			val = rec.OutsideHumidity / 10.0;
-			value.Humidity = rec.OutsideHumidity < 0 ? 0 : (int) val;
+			value.Humidity = rec.OutsideHumidity < 0 ? 0 : (int) Program.Cumulus.Calib.Hum.Calibrate(val);
 
 			val = rec.InsideHumidity / 10.0;
-			value.InsideHum = rec.InsideHumidity < 0 ? 0 : (int) val;
+			value.InsideHum = rec.InsideHumidity < 0 ? 0 : (int) Program.Cumulus.Calib.InHum.Calibrate(val);
 
 			double bucketSize;
 			string bucketUnit;
@@ -120,8 +120,8 @@ namespace ImportWLK
 					val = ConvertUnits.RainMMToUser(rainToday);
 				}
 
-				value.RainfallToday = val;
-				value.RainSinceMidnight = val;
+				value.RainfallToday = Program.Cumulus.Calib.Rain.Calibrate(val);
+				value.RainSinceMidnight = value.RainfallToday;
 			}
 
 			if (rec.RainRateHi >= 0)
@@ -141,11 +141,11 @@ namespace ImportWLK
 				conv = 0;
 			}
 
-			value.RainfallRate = conv;
+			value.RainfallRate = Program.Cumulus.Calib.Rain.Calibrate(conv);
 
 			val = rec.WindSpeed / 10.0;
 			conv = ConvertUnits.WindMPHToUser(val);
-			value.WindSpeed = rec.WindSpeed < 0 ? 0 : conv;
+			value.WindSpeed = rec.WindSpeed < 0 ? 0 : Program.Cumulus.Calib.WindSpeed.Calibrate(conv);
 
 			if (value.WindSpeed > WindAvgHigh)
 			{
@@ -155,8 +155,13 @@ namespace ImportWLK
 
 			val = rec.WindDir == 255 ? 0 : (int) (rec.WindDir * 22.5);
 			value.WindBearing = (int) val;
-			value.SolarRad = rec.Solar < 0 ? 0 : rec.Solar;
-			value.UVI = rec.UV > 200 ? 0 : rec.UV / 10;
+
+			val = rec.WindSpeedGust / 10.0;
+			conv = ConvertUnits.WindMPHToUser(val);
+			value.WindGust = rec.WindSpeedGust < 0 ? 0 : Program.Cumulus.Calib.WindGust.Calibrate(conv);
+
+			value.SolarRad = rec.Solar < 0 ? 0 : (int) Program.Cumulus.Calib.Solar.Calibrate(rec.Solar);
+			value.UVI = rec.UV > 200 ? 0 : Program.Cumulus.Calib.UV.Calibrate(rec.UV / 10);
 			value.ET = ConvertUnits.RainINToUser(rec.ET > 200 ? 0 : rec.ET / 1000);
 
 			// TODO: Chill hours
@@ -242,7 +247,7 @@ namespace ImportWLK
 			Program.LogMessage($"Writing {records.Count} to {logfilename}");
 			Program.LogConsole($"  Writing to {logfilename}", ConsoleColor.Gray);
 
-			// backup old dayfile.txt
+			// backup old log file
 			if (File.Exists(logfilename))
 			{
 				if (!File.Exists(logfilename + ".sav"))
@@ -327,7 +332,7 @@ namespace ImportWLK
 			var rec = keyval.Value;
 
 			// make sure solar max is calculated for those stations without a solar sensor
-			Program.LogMessage("DoLogFile: Writing log entry for " + rec.LogTime);
+			Program.LogDebugMessage("DoLogFile: Writing log entry for " + rec.LogTime);
 			var inv = CultureInfo.InvariantCulture;
 			var sep = ",";
 

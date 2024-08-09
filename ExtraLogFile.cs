@@ -196,7 +196,7 @@ namespace ImportWLK
 			var rec = keyval.Value;
 
 			// make sure solar max is calculated for those stations without a solar sensor
-			Program.LogMessage("DoExtraLogFile: Writing log entry for " + rec.LogTime);
+			Program.LogDebugMessage("DoExtraLogFile: Writing log entry for " + rec.LogTime);
 			var inv = CultureInfo.InvariantCulture;
 			var sep = ',';
 

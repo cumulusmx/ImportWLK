@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Security.Claims;
 
 namespace ImportWLK
 {
@@ -29,7 +30,7 @@ namespace ImportWLK
 		public int ChillHourSeasonStart;
 		public double ChillHourThreshold;
 
-		public double CalibRainMult;
+		public Calibrations Calib = new();
 
 		public DateTime RecordsBeganDateTime;
 
@@ -158,7 +159,37 @@ namespace ImportWLK
 				NOAAcoolingthreshold = Units.Temp == 0 ? 18.3 : 65;
 			}
 
-			CalibRainMult = ini.GetValue("Offsets", "RainMult", 1.0);
+			Calib.Press.Offset = ini.GetValue("Offsets", "PressOffset", 0.0);
+			Calib.Temp.Offset = ini.GetValue("Offsets", "TempOffset", 0.0);
+			Calib.Hum.Offset = ini.GetValue("Offsets", "HumOffset", 0);
+			Calib.WindDir.Offset = ini.GetValue("Offsets", "WindDirOffset", 0);
+			Calib.Solar.Offset = ini.GetValue("Offsets", "SolarOffset", 0.0);
+			Calib.UV.Offset = ini.GetValue("Offsets", "UVOffset", 0.0);
+			Calib.WetBulb.Offset = ini.GetValue("Offsets", "WetBulbOffset", 0.0);
+			Calib.InTemp.Offset = ini.GetValue("Offsets", "InTempOffset", 0.0);
+			Calib.InHum.Offset = ini.GetValue("Offsets", "InHumOffset", 0);
+
+			Calib.Press.Mult = ini.GetValue("Offsets", "PressMult", 1.0);
+			Calib.WindSpeed.Mult = ini.GetValue("Offsets", "WindSpeedMult", 1.0);
+			Calib.WindGust.Mult = ini.GetValue("Offsets", "WindGustMult", 1.0);
+			Calib.Temp.Mult = ini.GetValue("Offsets", "TempMult", 1.0);
+			Calib.Hum.Mult = ini.GetValue("Offsets", "HumMult", 1.0);
+			Calib.Rain.Mult = ini.GetValue("Offsets", "RainMult", 1.0);
+			Calib.Solar.Mult = ini.GetValue("Offsets", "SolarMult", 1.0);
+			Calib.UV.Mult = ini.GetValue("Offsets", "UVMult", 1.0);
+			Calib.WetBulb.Mult = ini.GetValue("Offsets", "WetBulbMult", 1.0);
+			Calib.InTemp.Mult = ini.GetValue("Offsets", "InTempMult", 1.0);
+			Calib.InHum.Mult = ini.GetValue("Offsets", "InHumMult", 1.0);
+
+			Calib.Press.Mult2 = ini.GetValue("Offsets", "PressMult2", 0.0);
+			Calib.WindSpeed.Mult2 = ini.GetValue("Offsets", "WindSpeedMult2", 0.0);
+			Calib.WindGust.Mult2 = ini.GetValue("Offsets", "WindGustMult2", 0.0);
+			Calib.Temp.Mult2 = ini.GetValue("Offsets", "TempMult2", 0.0);
+			Calib.Hum.Mult2 = ini.GetValue("Offsets", "HumMult2", 0.0);
+			Calib.InTemp.Mult2 = ini.GetValue("Offsets", "InTempMult2", 0.0);
+			Calib.InHum.Mult2 = ini.GetValue("Offsets", "InHumMult2", 0.0);
+			Calib.Solar.Mult2 = ini.GetValue("Offsets", "SolarMult2", 0.0);
+			Calib.UV.Mult2 = ini.GetValue("Offsets", "UVMult2", 0.0);
 
 			ChillHourSeasonStart = ini.GetValue("Station", "ChillHourSeasonStart", 10);
 			if (ChillHourSeasonStart < 1 || ChillHourSeasonStart > 12)

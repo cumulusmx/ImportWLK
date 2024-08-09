@@ -395,7 +395,7 @@ namespace ImportWLK
 			}
 
 			var val = rec.OutsideTempHi / 10.0;
-			var conv = ConvertUnits.TempFToUser(val);
+			var conv = Program.Cumulus.Calib.Temp.Calibrate(ConvertUnits.TempFToUser(val));
 			if (val > -150 && val < 250 && conv > value.HighTemp)
 			{
 				value.HighTemp = conv;
@@ -403,15 +403,15 @@ namespace ImportWLK
 			}
 
 			val = rec.OutsideTempLow / 10.0;
-			conv = ConvertUnits.TempFToUser(val);
+			conv = Program.Cumulus.Calib.Temp.Calibrate(ConvertUnits.TempFToUser(val));
 			if (val > -150 && val < 250 && conv < value.LowTemp)
 			{
-				value.LowTemp = conv;
+				value.LowTemp =conv;
 				value.LowTempTime = rec.Date.AddMinutes(rec.TimeMins[1]);
 			}
 
 			val = rec.OutsideTempAvg / 10.0;
-			conv = ConvertUnits.TempFToUser(val);
+			conv = Program.Cumulus.Calib.Temp.Calibrate(ConvertUnits.TempFToUser(val));
 			if (val > -150 && val < 250)
 			{
 				value.AvgTemp = conv;
@@ -446,14 +446,14 @@ namespace ImportWLK
 				value.LowDewPointTime = rec.Date.AddMinutes(rec.TimeMins[7]);
 			}
 
-			val = rec.OutsideHumidityHi / 10.0;
+			val = Program.Cumulus.Calib.Hum.Calibrate(rec.OutsideHumidityHi / 10.0);
 			if (val >= 0 && val <= 100 && val > value.HighHumidity)
 			{
 				value.HighHumidity = (int) val;
 				value.HighHumidityTime = rec.Date.AddMinutes(rec.TimeMins[8]);
 			}
 
-			val = rec.OutsideHumidityLow / 10.0;
+			val = Program.Cumulus.Calib.Hum.Calibrate(rec.OutsideHumidityLow / 10.0);
 			if (val >= 0 && val <= 100 && val < value.LowHumidity)
 			{
 				value.LowHumidity = (int) val;
@@ -465,14 +465,14 @@ namespace ImportWLK
 			// 11 = Lo Inside humidity
 
 			val = rec.BaroHi / 1000.0;
-			conv = ConvertUnits.PressINHGToUser(val);
+			conv = Program.Cumulus.Calib.Press.Calibrate(ConvertUnits.PressINHGToUser(val));
 			if (val> 25 && val < 32.5 && conv > value.HighPress)
 			{
 				value.HighPress = conv;
 				value.HighPressTime = rec.Date.AddMinutes(rec.TimeMins[12]);
 			}
 
-			val = rec.BaroLow / 1000.0;
+			val = Program.Cumulus.Calib.Press.Calibrate(rec.BaroLow / 1000.0);
 			conv = ConvertUnits.PressINHGToUser(val);
 			if (val > 25 && val < 32.5 && conv < value.LowPress)
 			{
@@ -481,7 +481,7 @@ namespace ImportWLK
 			}
 
 			val = rec.WindGustHi / 10.0;
-			conv = ConvertUnits.WindMPHToUser(val);
+			conv = Program.Cumulus.Calib.WindGust.Calibrate(ConvertUnits.WindMPHToUser(val));
 			if (val >= 0 && val < 200 && conv > value.HighGust)
 			{
 				value.HighGust = conv;
@@ -494,7 +494,7 @@ namespace ImportWLK
 			}
 
 			val = rec.WindAvgHi / 10.0;
-			conv = ConvertUnits.WindMPHToUser(val);
+			conv = Program.Cumulus.Calib.WindSpeed.Calibrate(ConvertUnits.WindMPHToUser(val));
 			if (val >= 0 && val < 200 && conv > value.HighAvgWind)
 			{
 				value.HighAvgWind = conv;
@@ -502,28 +502,28 @@ namespace ImportWLK
 			}
 
 			val = rec.RainRateHi / 1000.0;
-			conv = ConvertUnits.RainINToUser(val);
+			conv = Program.Cumulus.Calib.Rain.Calibrate(ConvertUnits.RainINToUser(val));
 			if (val >= 0 && val < 300 && conv > value.HighRainRate)
 			{
 				value.HighRainRate = conv;
 				value.HighRainRateTime = rec.Date.AddMinutes(rec.TimeMins[16]);
 			}
 
-			val = rec.UvHi / 10.0;
+			val = Program.Cumulus.Calib.UV.Calibrate(rec.UvHi / 10.0);
 			if (val >= 0 && val < 20 && conv > value.HighUv)
 			{
 				value.HighUv = val;
 				value.HighUvTime = rec.Date.AddMinutes(rec.TimeMins[17]);
 			}
 
-			val = rec.DailyRainTotal / 1000.0;
+			val = Program.Cumulus.Calib.Rain.Calibrate(rec.DailyRainTotal / 1000.0);
 			conv = ConvertUnits.RainINToUser(rec.DailyRainTotal / 1000.0);
 			if (val >= 0 && val < 32 && conv > value.TotalRain)
 			{
 				value.TotalRain = conv;
 			}
 
-			val = rec.WindRun / 10.0;
+			val = Program.Cumulus.Calib.WindSpeed.Calibrate(rec.WindRun / 10.0);
 			conv = ConvertUnits.MilesToUserUnits(rec.WindRun / 10.0);
 			if (val >= 0 && val < 3200 && conv > value.WindRun)
 			{

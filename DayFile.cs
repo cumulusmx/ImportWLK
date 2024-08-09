@@ -516,8 +516,8 @@ namespace ImportWLK
 				value.HighUvTime = rec.Date.AddMinutes(rec.TimeMins[17]);
 			}
 
-			val = Program.Cumulus.Calib.Rain.Calibrate(rec.DailyRainTotal / 1000.0);
-			conv = ConvertUnits.RainINToUser(rec.DailyRainTotal / 1000.0);
+			val = Program.Cumulus.Calib.Rain.Calibrate(rec.DailyRainTotal / 100.0);
+			conv = ConvertUnits.RainINToUser(rec.DailyRainTotal / 100.0);
 			if (val >= 0 && val < 32 && conv > value.TotalRain)
 			{
 				value.TotalRain = conv;

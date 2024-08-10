@@ -162,6 +162,7 @@ namespace ImportWLK
 			val = rec.WindSpeedGust / 10.0;
 			conv = ConvertUnits.WindMPHToUser(val);
 			value.WindGust = rec.WindSpeedGust < 0 ? 0 : Program.Cumulus.Calib.WindGust.Calibrate(conv);
+			value.CurrentGust = value.WindGust;
 
 			value.SolarRad = rec.Solar < 0 ? 0 : (int) Program.Cumulus.Calib.Solar.Calibrate(rec.Solar);
 			value.UVI = rec.UV > 200 ? 0 : Program.Cumulus.Calib.UV.Calibrate(rec.UV / 10.0);

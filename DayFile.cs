@@ -71,6 +71,9 @@ namespace ImportWLK
 
 				foreach (var rec in Records)
 				{
+					if (rec.Key.Date == DateTime.Now.Date)
+						break;
+
 					var line = RecToCsv(rec);
 					if (null != line)
 						file.WriteLine(line);
@@ -253,7 +256,7 @@ namespace ImportWLK
 				strb.Append(rec.ET.ToString(Program.Cumulus.ETFormat, inv) + sep);
 
 			if (rec.SunShineHours < -9998)
-				strb.Append(sep);
+				strb.Append("0" + sep);
 			else
 				strb.Append(rec.SunShineHours.ToString(Program.Cumulus.SunFormat, inv) + sep);
 

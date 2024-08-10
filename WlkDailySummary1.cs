@@ -29,9 +29,9 @@
 		public short BaroLow;               // 40; 0.001 inHg
 		public short BaroAvg;               // 42: 0.001 inHg
 		public short WindGustHi;            // 44: 0.1 mph
-		public short WindAvg;           // 46: 0.1 mph
+		public short WindAvg;               // 46: 0.1 mph
 		public short WindRun;               // 48: 0.1 mile
-		public short WindAvgHi;           // 50: 0.1 mph
+		public short WindAvgHi;             // 50: 0.1 mph
 		public byte WindDirGustHi;          // 52: direction code (0-15, dash = 255)
 		public byte WindDirAvgHi;           // 53: direction code (0-15, dash = 255)
 		public short DailyRainTotal;        // 54: 0.001 in

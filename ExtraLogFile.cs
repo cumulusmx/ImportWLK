@@ -28,11 +28,11 @@ namespace ImportWLK
 				rec.ExtraHum[0] < 255 || rec.ExtraHum[1] < 255 || rec.ExtraHum[2] < 255 || rec.ExtraHum[3] < 255 || rec.ExtraHum[4] < 255 || rec.ExtraHum[5] < 255 || rec.ExtraHum[6] < 255)
 			{
 				// we have data
-				Program.LogMessage("  Extra log entry for " + rec.Timestamp);
+				Program.LogDebugMessage("  Extra log entry for " + rec.Timestamp);
 			}
 			else
 			{
-				Program.LogMessage("  Skipping extra log entry for " + rec.Timestamp);
+				Program.LogDebugMessage("  Skipping extra log entry for " + rec.Timestamp);
 				return;
 			}
 
@@ -164,7 +164,6 @@ namespace ImportWLK
 			{
 				Program.LogMessage($"Error writing to {logfilename}: {ex.Message}");
 			}
-
 		}
 
 		public static string RecToCsv(KeyValuePair<DateTime, ExtraLogFileRec> keyval)
@@ -268,7 +267,6 @@ namespace ImportWLK
 		{
 			return "ExtraLog" + thedate.ToString("yyyyMM") + "log.txt";
 		}
-
 	}
 
 	internal class ExtraLogFileRec

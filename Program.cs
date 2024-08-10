@@ -162,14 +162,14 @@ namespace ImportWLK
 							if (type == 1)
 							{
 								// archive record
-								LogMessage("Processing archive record type 1");
+								LogDebugMessage("Processing archive record type 1");
 
 								var rec = new WlkArchiveRecord();
 								rec.ReadRecord(binReader);
 
 								rec.Timestamp = date.AddMinutes(rec.PackedTime);
 
-								LogMessage("  Log entry time: " + rec.Timestamp.ToUniversalTime());
+								LogDebugMessage("  Log entry time: " + rec.Timestamp.ToUniversalTime());
 
 								// The wlk file contains the midnight entry for the following month, Cumulus starts the day at midnight rather than ending it midnight
 								if (rec.Timestamp.Month != month)
@@ -202,7 +202,7 @@ namespace ImportWLK
 							else if (type == 2)
 							{
 								// daily summary1
-								LogMessage("Processing summary record type 2");
+								LogDebugMessage("Processing summary record type 2");
 
 								var rec = new WlkDailySummary1();
 								rec.ReadRecord(binReader);
@@ -213,7 +213,7 @@ namespace ImportWLK
 							else if (type == 3)
 							{
 								// daily summary2
-								LogMessage("Processing summary record type 3");
+								LogDebugMessage("Processing summary record type 3");
 
 								var rec = new WlkDailySummary2();
 								rec.ReadRecord(binReader);

@@ -55,9 +55,12 @@ namespace ImportWLK
 				records.Add(rec.Timestamp, value);
 			}
 
+			// Only apply calibration to wind, pressure, rain, and solar values
+			// Temperature and humidity can already be calibrated in WeatherLinlk PC
+
 			var val = rec.OutsideTemp / 10.0;
 			var conv = ConvertUnits.TempFToUser(val);
-			value.Temperature = rec.OutsideTemp < -2000 ? 0 : Program.Cumulus.Calib.Temp.Calibrate(conv);
+			value.Temperature = rec.OutsideTemp < -2000 ? 0 : conv;
 
 			// not used
 			// OutsideTempHi
@@ -65,17 +68,17 @@ namespace ImportWLK
 
 			val = rec.InsideTemp / 10.0;
 			conv = ConvertUnits.TempFToUser(val);
-			value.InsideTemp = rec.InsideTemp < -2000 ? 0 : Program.Cumulus.Calib.InTemp.Calibrate(conv);
+			value.InsideTemp = rec.InsideTemp < -2000 ? 0 : conv;
 
 			val = rec.Baro / 1000.0;
 			conv = ConvertUnits.PressINHGToUser(val);
 			value.Baro = rec.Baro < 0 ? 0 : Program.Cumulus.Calib.Press.Calibrate(conv);
 
 			val = rec.OutsideHumidity / 10.0;
-			value.Humidity = rec.OutsideHumidity < 0 ? 0 : (int) Program.Cumulus.Calib.Hum.Calibrate(val);
+			value.Humidity = rec.OutsideHumidity < 0 ? 0 : (int) val;
 
 			val = rec.InsideHumidity / 10.0;
-			value.InsideHum = rec.InsideHumidity < 0 ? 0 : (int) Program.Cumulus.Calib.InHum.Calibrate(val);
+			value.InsideHum = rec.InsideHumidity < 0 ? 0 : (int) val;
 
 			double bucketSize;
 			string bucketUnit;
@@ -161,7 +164,7 @@ namespace ImportWLK
 			value.WindGust = rec.WindSpeedGust < 0 ? 0 : Program.Cumulus.Calib.WindGust.Calibrate(conv);
 
 			value.SolarRad = rec.Solar < 0 ? 0 : (int) Program.Cumulus.Calib.Solar.Calibrate(rec.Solar);
-			value.UVI = rec.UV > 200 ? 0 : Program.Cumulus.Calib.UV.Calibrate(rec.UV / 10);
+			value.UVI = rec.UV > 200 ? 0 : Program.Cumulus.Calib.UV.Calibrate(rec.UV / 10.0);
 			value.ET = ConvertUnits.RainINToUser(rec.ET > 200 ? 0 : rec.ET / 1000);
 
 			// TODO: Chill hours
@@ -293,7 +296,6 @@ namespace ImportWLK
 			{
 				Program.LogMessage($"Error writing to {logfilename}: {ex.Message}");
 			}
-
 		}
 
 		public static string RecToCsv(KeyValuePair<DateTime, LogFileRec> keyval)
@@ -374,7 +376,6 @@ namespace ImportWLK
 		{
 			return  thedate.ToString("yyyyMM") + "log.txt";
 		}
-
 	}
 
 	internal class LogFileRec

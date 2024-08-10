@@ -394,8 +394,11 @@ namespace ImportWLK
 				Records.Add(rec.Date, value);
 			}
 
+			// Only apply calibration to wind, pressure, rain, and solar values
+			// Temperature and humidity can already be calibrated in WeatherLinlk PC
+
 			var val = rec.OutsideTempHi / 10.0;
-			var conv = Program.Cumulus.Calib.Temp.Calibrate(ConvertUnits.TempFToUser(val));
+			var conv = ConvertUnits.TempFToUser(val);
 			if (val > -150 && val < 250 && conv > value.HighTemp)
 			{
 				value.HighTemp = conv;
@@ -403,7 +406,7 @@ namespace ImportWLK
 			}
 
 			val = rec.OutsideTempLow / 10.0;
-			conv = Program.Cumulus.Calib.Temp.Calibrate(ConvertUnits.TempFToUser(val));
+			conv = ConvertUnits.TempFToUser(val);
 			if (val > -150 && val < 250 && conv < value.LowTemp)
 			{
 				value.LowTemp =conv;
@@ -411,7 +414,7 @@ namespace ImportWLK
 			}
 
 			val = rec.OutsideTempAvg / 10.0;
-			conv = Program.Cumulus.Calib.Temp.Calibrate(ConvertUnits.TempFToUser(val));
+			conv = ConvertUnits.TempFToUser(val);
 			if (val > -150 && val < 250)
 			{
 				value.AvgTemp = conv;
@@ -446,14 +449,14 @@ namespace ImportWLK
 				value.LowDewPointTime = rec.Date.AddMinutes(rec.TimeMins[7]);
 			}
 
-			val = Program.Cumulus.Calib.Hum.Calibrate(rec.OutsideHumidityHi / 10.0);
+			val = rec.OutsideHumidityHi / 10.0;
 			if (val >= 0 && val <= 100 && val > value.HighHumidity)
 			{
 				value.HighHumidity = (int) val;
 				value.HighHumidityTime = rec.Date.AddMinutes(rec.TimeMins[8]);
 			}
 
-			val = Program.Cumulus.Calib.Hum.Calibrate(rec.OutsideHumidityLow / 10.0);
+			val = rec.OutsideHumidityLow / 10.0;
 			if (val >= 0 && val <= 100 && val < value.LowHumidity)
 			{
 				value.LowHumidity = (int) val;
@@ -501,7 +504,7 @@ namespace ImportWLK
 				value.HighAvgWindTime = rec.Date.AddMinutes(rec.TimeMins[15]);
 			}
 
-			val = rec.RainRateHi / 1000.0;
+			val = rec.RainRateHi / 100.0;
 			conv = Program.Cumulus.Calib.Rain.Calibrate(ConvertUnits.RainINToUser(val));
 			if (val >= 0 && val < 300 && conv > value.HighRainRate)
 			{
@@ -516,15 +519,15 @@ namespace ImportWLK
 				value.HighUvTime = rec.Date.AddMinutes(rec.TimeMins[17]);
 			}
 
-			val = Program.Cumulus.Calib.Rain.Calibrate(rec.DailyRainTotal / 100.0);
-			conv = ConvertUnits.RainINToUser(rec.DailyRainTotal / 100.0);
+			val = Program.Cumulus.Calib.Rain.Calibrate(rec.DailyRainTotal / 1000.0);
+			conv = ConvertUnits.RainINToUser(val);
 			if (val >= 0 && val < 32 && conv > value.TotalRain)
 			{
 				value.TotalRain = conv;
 			}
 
 			val = Program.Cumulus.Calib.WindSpeed.Calibrate(rec.WindRun / 10.0);
-			conv = ConvertUnits.MilesToUserUnits(rec.WindRun / 10.0);
+			conv = ConvertUnits.MilesToUserUnits(val);
 			if (val >= 0 && val < 3200 && conv > value.WindRun)
 			{
 				value.WindRun = conv;
@@ -541,7 +544,7 @@ namespace ImportWLK
 
 			if (rec.SolarHi != short.MaxValue)
 			{
-				value.HighSolar = rec.SolarHi;
+				value.HighSolar = (int) Program.Cumulus.Calib.Solar.Calibrate(rec.SolarHi);
 				value.HighSolarTime = rec.Date.AddMinutes(rec.TimeMins[0]);
 			}
 

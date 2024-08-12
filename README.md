@@ -58,5 +58,9 @@ After running the ImportWLK convertor, you will need to perform some additional 
 ### Run CreateMissing
 The ImportWLK utility adds most of the data to your day file when it creates the monthly log files. However some data is complex to derive and it is left to the CreateMissing utility to fill in these final bits.
 
+You can find the CreateMissing documentation online here: https://github.com/cumulusmx/CreateMissing
+
 ### Run the records editors in Cumulus MX
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+There is no automatic way of updating the records in Cumulus MX. You will have to use the various records editors to manually update them. Load each records screen, and you can click record values and times from either the day file or the monthy log files and they will replace the current values.
+
+Not having an automatic means of doing this is probably a good thing as it allows you to disregard (and possibly correct) silly values that may have crept into the day file and log files. If you have records from some previous software refer to those as well, as some transient values may have been recorded that are missing from the imported log files.

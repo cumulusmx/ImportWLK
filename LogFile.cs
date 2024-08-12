@@ -156,8 +156,9 @@ namespace ImportWLK
 				WindAvgHighTime = rec.Timestamp;
 			}
 
-			val = rec.WindDir == 255 ? 0 : (int) (rec.WindDir * 22.5);
+			val = rec.WindDir == 255 ? 0 : (int) ((rec.WindDir + 1) * 22.5);
 			value.WindBearing = (int) val;
+			value.CurrentBearing = value.WindBearing;
 
 			val = rec.WindSpeedGust / 10.0;
 			conv = ConvertUnits.WindMPHToUser(val);

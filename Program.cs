@@ -162,14 +162,14 @@ namespace ImportWLK
 							if (type == 1)
 							{
 								// archive record
-								LogDebugMessage("Processing archive record type 1");
+								LogDebugMessage($"Processing archive record {i} type 1");
 
 								var rec = new WlkArchiveRecord();
 								rec.ReadRecord(binReader);
 
 								rec.Timestamp = date.AddMinutes(rec.PackedTime);
 
-								LogDebugMessage("  Log entry time: " + rec.Timestamp.ToUniversalTime());
+								LogDebugMessage("  Log entry time: " + rec.Timestamp);
 
 								// The wlk file contains the midnight entry for the following month, Cumulus starts the day at midnight rather than ending it midnight
 								if (rec.Timestamp.Month != month)
@@ -202,7 +202,7 @@ namespace ImportWLK
 							else if (type == 2)
 							{
 								// daily summary1
-								LogDebugMessage("Processing summary record type 2");
+								LogDebugMessage($"Processing archive record {i} type 2");
 
 								var rec = new WlkDailySummary1();
 								rec.ReadRecord(binReader);
@@ -213,7 +213,7 @@ namespace ImportWLK
 							else if (type == 3)
 							{
 								// daily summary2
-								LogDebugMessage("Processing summary record type 3");
+								LogDebugMessage($"Processing archive record {i} type 3");
 
 								var rec = new WlkDailySummary2();
 								rec.ReadRecord(binReader);
@@ -300,36 +300,42 @@ namespace ImportWLK
 
 		private static void SetExtraValues(DateTime date)
 		{
+			if (!DayFile.Records.TryGetValue(date, out var value))
+			{
+				LogConsole($"No summary data for {date:yyyy-MM-dd}, cannot create day file entry. Try using CreateMissing after this import", ConsoleColor.Red);
+				return;
+			}
+
 			// set the daily records for derived values
 			if (LogFile.HumidexHigh > -9999)
 			{
-				DayFile.Records[date].HighHumidex = LogFile.HumidexHigh;
-				DayFile.Records[date].HighHumidexTime = LogFile.HumidexHighTime;
+				value.HighHumidex = LogFile.HumidexHigh;
+				value.HighHumidexTime = LogFile.HumidexHighTime;
 			}
 			if (LogFile.ApparentHigh > -9999)
 			{
-				DayFile.Records[date].HighAppTemp = LogFile.ApparentHigh;
-				DayFile.Records[date].HighAppTempTime = LogFile.ApparentHighTime;
+				value.HighAppTemp = LogFile.ApparentHigh;
+				value.HighAppTempTime = LogFile.ApparentHighTime;
 			}
 			if (LogFile.ApparentLow < 9999)
 			{
-				DayFile.Records[date].LowAppTemp = LogFile.ApparentLow;
-				DayFile.Records[date].LowAppTempTime = LogFile.ApparentLowTime;
+				value.LowAppTemp = LogFile.ApparentLow;
+				value.LowAppTempTime = LogFile.ApparentLowTime;
 			}
 			if (LogFile.FeelsLikeHigh > -9999)
 			{
-				DayFile.Records[date].HighFeelsLike = LogFile.FeelsLikeHigh;
-				DayFile.Records[date].HighFeelsLikeTime = LogFile.FeelsLikeHighTime;
+				value.HighFeelsLike = LogFile.FeelsLikeHigh;
+				value.HighFeelsLikeTime = LogFile.FeelsLikeHighTime;
 			}
 			if (LogFile.FeelsLikeLow < 9999)
 			{
-				DayFile.Records[date].LowFeelsLike = LogFile.FeelsLikeLow;
-				DayFile.Records[date].LowFeelsLikeTime = LogFile.FeelsLikeLowTime;
+				value.LowFeelsLike = LogFile.FeelsLikeLow;
+				value.LowFeelsLikeTime = LogFile.FeelsLikeLowTime;
 			}
 			if (LogFile.WindAvgHigh > -9999)
 			{
-				DayFile.Records[date].HighAvgWind = LogFile.WindAvgHigh;
-				DayFile.Records[date].HighAvgWindTime = LogFile.WindAvgHighTime;
+				value.HighAvgWind = LogFile.WindAvgHigh;
+				value.HighAvgWindTime = LogFile.WindAvgHighTime;
 			}
 		}
 	}

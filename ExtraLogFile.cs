@@ -191,6 +191,15 @@ namespace ImportWLK
 			// 89  CO2 pm10 avg
 			// 90  CO2 temp
 			// 91  CO2 hum
+			// 92-95 Laser Distance 1-4
+			// 96-99 Laser Depth 1-4
+			// 100 Snowfall Accumulation 24h
+			// 101-106 Temperature 11-16
+			// 107-112 Humidity 11-16
+			// 113-118 Dew point 11-16
+			// 119-122 AQ PM10 1-4
+			// 123-126 AQ PM10 Avg 1-4
+			// 127-143 Soil EC 1-16
 
 			var rec = keyval.Value;
 
@@ -200,65 +209,75 @@ namespace ImportWLK
 			var sep = ',';
 
 			var sb = new StringBuilder(256);
-			sb.Append(rec.LogTime.ToString("dd/MM/yy HH:mm", inv) + sep);
-			sb.Append(new DateTimeOffset(rec.LogTime).ToUnixTimeSeconds() + sep);
+			sb.Append(rec.LogTime.ToString("dd/MM/yy HH:mm", inv));
+			sb.Append(sep + new DateTimeOffset(rec.LogTime).ToUnixTimeSeconds());
 			// Extra Temp 1-10
 			for (int i = 0; i < 10; i++)
 			{
-				sb.Append(rec.Temperature[i].ToString(Program.Cumulus.TempFormat, inv) + sep);
+				sb.Append(sep + rec.Temperature[i].ToString(Program.Cumulus.TempFormat, inv));
 			}
 			// Extra Hum 1-10
 			for (int i = 0; i < 10; i++)
 			{
-				sb.Append(rec.Humidity[i].ToString() + sep);
+				sb.Append(sep + rec.Humidity[i].ToString());
 			}
 			// Extra Dewpoint 1-10
 			for (int i = 0; i < 10; i++)
 			{
-				sb.Append(rec.Dewpoint[i].ToString(Program.Cumulus.TempFormat, inv) + sep);
+				sb.Append(sep + rec.Dewpoint[i].ToString(Program.Cumulus.TempFormat, inv));
 			}
 			// Extra Soil Temp 1-4
 			for (int i = 0; i < 4; i++)
 			{
-				sb.Append(rec.SoilTemp[i].ToString(Program.Cumulus.TempFormat, inv) + sep);
+				sb.Append(sep + rec.SoilTemp[i].ToString(Program.Cumulus.TempFormat, inv));
 			}
 			// Extra Soil Moisture 1-4
 			for (int i = 0; i < 4; i++)
 			{
-				sb.Append(rec.SoilMoisture[i].ToString() + sep);
+				sb.Append(sep + rec.SoilMoisture[i].ToString());
 			}
 			// Leaf temp - not used
-			sb.Append("0,0,0,0,");
+			sb.Append(",,,,");
 			// Extra Leaf wetness 1-2
-			sb.Append(rec.LeafWetness[0].ToString() + sep);
-			sb.Append(rec.LeafWetness[1].ToString() + sep);
+			sb.Append(sep + rec.LeafWetness[0].ToString());
+			sb.Append(sep + rec.LeafWetness[1].ToString());
 			// Soil Temp 5-16
 			for (int i = 4; i < 16; i++)
 			{
-				sb.Append(rec.SoilTemp[i].ToString(Program.Cumulus.TempFormat, inv) + sep);
+				sb.Append(sep + rec.SoilTemp[i].ToString(Program.Cumulus.TempFormat, inv));
 			}
 			// Soil Moisture 5-16
 			for (int i = 4; i < 16; i++)
 			{
-				sb.Append(rec.SoilMoisture[i].ToString() + sep);
+				sb.Append(sep + rec.SoilMoisture[i].ToString());
 			}
 			// Air quality 1-4
-			for (int i = 0; i < 4; i++)
-			{
-				sb.Append("0" + sep);
-			}
+			sb.Append(sep, 4);
 			// Air quality avg 1-4
-			for (int i = 0; i < 4; i++)
-			{
-				sb.Append("0" + sep);
-			}
+			sb.Append(sep, 4);
 			// User temp 1-8
-			for (int i = 0; i < 8; i++)
-			{
-				sb.Append("0" + sep);
-			}
+			sb.Append(sep, 8);
 			// CO2
-			sb.Append("0,0,0,0,0,0,0,0");
+			sb.Append(sep, 7);
+			// Laser dist 1-4
+			sb.Append(sep, 4);
+			// Laser depth 1-4
+			sb.Append(sep, 4);
+			// snowfall
+			sb.Append(sep);
+			// Extra temp 11-16
+			sb.Append(sep, 6);
+			// Extra hum 11-16
+			sb.Append(sep, 6);
+			// Extra dew point 11-16
+			sb.Append(sep, 6);
+			// AQ pm10 1-4
+			sb.Append(sep, 4);
+			// AQ pm10 avg 1-4
+			sb.Append(sep, 4);
+			// Soil EC 1-16
+			sb.Append(sep, 16);
+
 
 			return sb.ToString();
 		}

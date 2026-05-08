@@ -146,6 +146,10 @@ namespace ImportWLK
 			// 52  Chill hours
 			// 53  High 24 hr rain
 			// 54  Time of high 24 hr rain
+			// 55  High BGT
+			// 56  High BGT time
+			// 57  High WBGT
+			// 58  High WBGT time
 
 			var inv = CultureInfo.InvariantCulture;
 			const char sep = ',';
@@ -155,16 +159,16 @@ namespace ImportWLK
 			string datestring = rec.Date.ToString($"dd/MM/yy", inv);
 			// NB this string is just for logging, the dayfile update code is further down
 			var strb = new StringBuilder(300);
-			strb.Append(datestring + sep);
+			strb.Append(datestring);
 
 			if (rec.HighGust < -9998)
 				return null;
 			//strb.Append("0.0" + listsep + "0" + listsep + "00:00" + listsep)
 			else
 			{
-				strb.Append(rec.HighGust.ToString(Program.Cumulus.WindFormat, inv) + sep);
-				strb.Append(rec.HighGustBearing.ToString() + sep);
-				strb.Append(rec.HighGustTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighGust.ToString(Program.Cumulus.WindFormat, inv));
+				strb.Append(sep + rec.HighGustBearing.ToString());
+				strb.Append(sep + rec.HighGustTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowTemp > 9998)
@@ -172,8 +176,8 @@ namespace ImportWLK
 			//strb.Append("0.0" + listsep + "00:00" + listsep)
 			else
 			{
-				strb.Append(rec.LowTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.LowTempTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowTemp.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.LowTempTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighTemp < -9998)
@@ -181,8 +185,8 @@ namespace ImportWLK
 			//strb.Append("0.0" + listsep + "00:00" + listsep)
 			else
 			{
-				strb.Append(rec.HighTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.HighTempTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighTemp.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.HighTempTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowPress > 9998)
@@ -190,8 +194,8 @@ namespace ImportWLK
 			//strb.Append("0.0" + listsep + "00:00" + listsep)
 			else
 			{
-				strb.Append(rec.LowPress.ToString(Program.Cumulus.PressFormat, inv) + sep);
-				strb.Append(rec.LowPressTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowPress.ToString(Program.Cumulus.PressFormat, inv));
+				strb.Append(sep + rec.LowPressTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighPress < -9998)
@@ -199,8 +203,8 @@ namespace ImportWLK
 			//strb.Append("0.0" + listsep + "00:00" + listsep)
 			else
 			{
-				strb.Append(rec.HighPress.ToString(Program.Cumulus.PressFormat, inv) + sep);
-				strb.Append(rec.HighPressTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighPress.ToString(Program.Cumulus.PressFormat, inv));
+				strb.Append(sep + rec.HighPressTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighRainRate < -9998)
@@ -208,173 +212,173 @@ namespace ImportWLK
 			//strb.Append("0.0" + listsep + "00:00" + listsep)
 			else
 			{
-				strb.Append(rec.HighRainRate.ToString(Program.Cumulus.RainFormat, inv) + sep);
-				strb.Append(rec.HighRainRateTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighRainRate.ToString(Program.Cumulus.RainFormat, inv));
+				strb.Append(sep + rec.HighRainRateTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.TotalRain < -9998)
 				return null;
 			//strb.Append("0.0" + listsep)
 			else
-				strb.Append(rec.TotalRain.ToString(Program.Cumulus.RainFormat, inv) + sep);
+				strb.Append(sep + rec.TotalRain.ToString(Program.Cumulus.RainFormat, inv));
 
 			if (rec.AvgTemp < -9998)
 				strb.Append(sep);
 			else
-				strb.Append(rec.AvgTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
+				strb.Append(sep + rec.AvgTemp.ToString(Program.Cumulus.TempFormat, inv));
 
 
-			strb.Append(rec.WindRun.ToString("F1", inv) + sep);
+			strb.Append(sep + rec.WindRun.ToString("F1", inv));
 
 			if (rec.HighAvgWind < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighAvgWind.ToString(Program.Cumulus.WindAvgFormat, inv) + sep);
-				strb.Append(rec.HighAvgWindTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighAvgWind.ToString(Program.Cumulus.WindAvgFormat, inv));
+				strb.Append(sep + rec.HighAvgWindTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowHumidity == 9999)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.LowHumidity.ToString() + sep);
-				strb.Append(rec.LowHumidityTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowHumidity.ToString());
+				strb.Append(sep + rec.LowHumidityTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighHumidity == -9999)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighHumidity.ToString() + sep);
-				strb.Append(rec.HighHumidityTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighHumidity.ToString());
+				strb.Append(sep + rec.HighHumidityTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.ET < -9998)
 				strb.Append(sep);
 			else
-				strb.Append(rec.ET.ToString(Program.Cumulus.ETFormat, inv) + sep);
+				strb.Append(sep + rec.ET.ToString(Program.Cumulus.ETFormat, inv));
 
 			if (rec.SunShineHours < -9998)
-				strb.Append("0" + sep);
+				strb.Append(sep);
 			else
-				strb.Append(rec.SunShineHours.ToString(Program.Cumulus.SunFormat, inv) + sep);
+				strb.Append(sep + rec.SunShineHours.ToString(Program.Cumulus.SunFormat, inv));
 
 			if (rec.HighHeatIndex < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighHeatIndex.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.HighHeatIndexTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighHeatIndex.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.HighHeatIndexTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighAppTemp < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighAppTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.HighAppTempTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighAppTemp.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.HighAppTempTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowAppTemp > 9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.LowAppTemp.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.LowAppTempTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowAppTemp.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.LowAppTempTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighHourlyRain < 0)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighHourlyRain.ToString(Program.Cumulus.RainFormat, inv) + sep);
-				strb.Append(rec.HighHourlyRainTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighHourlyRain.ToString(Program.Cumulus.RainFormat, inv));
+				strb.Append(sep + rec.HighHourlyRainTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowWindChill > 9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.LowWindChill.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.LowWindChillTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowWindChill.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.LowWindChillTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighDewPoint < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighDewPoint.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.HighDewPointTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighDewPoint.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.HighDewPointTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowDewPoint < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.LowDewPoint.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.LowDewPointTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowDewPoint.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.LowDewPointTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.DominantWindBearing < 0 || rec.DominantWindBearing == 9999)
 				strb.Append(sep);
 			else
-				strb.Append(rec.DominantWindBearing.ToString() + sep);
+				strb.Append(sep + rec.DominantWindBearing.ToString());
 
 			if (rec.HeatingDegreeDays < -9998)
 				strb.Append(sep);
 			else
-				strb.Append(rec.HeatingDegreeDays.ToString("F1", inv) + sep);
+				strb.Append(sep + rec.HeatingDegreeDays.ToString("F1", inv));
 
 			if (rec.CoolingDegreeDays < -9998)
 				strb.Append(sep);
 			else
-				strb.Append(rec.CoolingDegreeDays.ToString("F1", inv) + sep);
+				strb.Append(sep + rec.CoolingDegreeDays.ToString("F1", inv));
 
 			if (rec.HighSolar < 0 || rec.HighSolar > 9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighSolar.ToString() + sep);
-				strb.Append(rec.HighSolarTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighSolar.ToString());
+				strb.Append(sep + rec.HighSolarTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighUv < 0)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighUv.ToString(Program.Cumulus.UVFormat, inv) + sep);
-				strb.Append(rec.HighUvTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighUv.ToString(Program.Cumulus.UVFormat, inv));
+				strb.Append(sep + rec.HighUvTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighFeelsLike < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighFeelsLike.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.HighFeelsLikeTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighFeelsLike.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.HighFeelsLikeTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.LowFeelsLike > 9998 || rec.LowFeelsLike < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.LowFeelsLike.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.LowFeelsLikeTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.LowFeelsLike.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.LowFeelsLikeTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.HighHumidex < -9998)
 				strb.Append(sep, 2);
 			else
 			{
-				strb.Append(rec.HighHumidex.ToString(Program.Cumulus.TempFormat, inv) + sep);
-				strb.Append(rec.HighHumidexTime.ToString("HH:mm", inv) + sep);
+				strb.Append(sep + rec.HighHumidex.ToString(Program.Cumulus.TempFormat, inv));
+				strb.Append(sep + rec.HighHumidexTime.ToString("HH:mm", inv));
 			}
 
 			if (rec.ChillHours < 0)
 				strb.Append(sep);
 			else
-				strb.Append(rec.ChillHours.ToString("F1", inv) + sep);
+				strb.Append(sep + rec.ChillHours.ToString("F1", inv));
 
 			if (rec.HighRain24h < 0)
 				strb.Append(sep, 2);
@@ -383,6 +387,8 @@ namespace ImportWLK
 				strb.Append(rec.HighRain24h.ToString(Program.Cumulus.TempFormat, inv));
 				strb.Append(rec.HighRain24hTime.ToString("HH:mm", inv));
 			}
+			// wbt/wbgt
+			strb.Append(sep, 4);
 
 			Program.LogMessage("Dayfile.txt Added: " + datestring);
 

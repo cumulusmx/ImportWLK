@@ -340,11 +340,11 @@ namespace ImportWLK
 			// make sure solar max is calculated for those stations without a solar sensor
 			Program.LogDebugMessage("DoLogFile: Writing log entry for " + rec.LogTime);
 			var inv = CultureInfo.InvariantCulture;
-			var sep = ",";
+			var sep = ',';
 
 			var sb = new StringBuilder(256);
 			sb.Append(rec.LogTime.ToString("dd/MM/yy HH:mm", inv));
-			sb.Append(sep + new DateTimeOffset(rec.LogTime).ToUnixTimeSeconds());
+			sb.Append(sep + new DateTimeOffset(rec.LogTime).ToUnixTimeSeconds().ToString());
 			sb.Append(sep + rec.Temperature.ToString(Program.Cumulus.TempFormat, inv));
 			sb.Append(sep + rec.Humidity.ToString());
 			sb.Append(sep + rec.Dewpoint.ToString(Program.Cumulus.TempFormat, inv));

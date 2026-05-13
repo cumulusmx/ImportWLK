@@ -210,7 +210,7 @@ namespace ImportWLK
 
 			var sb = new StringBuilder(256);
 			sb.Append(rec.LogTime.ToString("dd/MM/yy HH:mm", inv));
-			sb.Append(sep + new DateTimeOffset(rec.LogTime).ToUnixTimeSeconds());
+			sb.Append(sep + new DateTimeOffset(rec.LogTime).ToUnixTimeSeconds().ToString());
 			// Extra Temp 1-10
 			for (int i = 0; i < 10; i++)
 			{
